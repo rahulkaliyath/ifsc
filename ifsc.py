@@ -210,7 +210,33 @@ class IFSC:
 
 
 def main():
-    pass
+    ifsc = IFSC()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-ifsc","-i", help="Enter the IFSC CODE")
+    parser.add_argument("-b","--bank", help="Enter the Bank CODE")
+    parser.add_argument("-v","--validate",action="store_true", help="Use flag to validate code")
+    parser.add_argument("-g","--get",action="store_true", help="Use flag to validate code")
+
+
+
+    args = parser.parse_args()
+
+ 
+    ifsc_code = args.ifsc
+    bank = args.bank
+    validate = args.validate
+    get = args.get
+
+    if ifsc_code and validate:
+        print(ifsc.validate(ifsc_code))
+    
+    elif ifsc_code and get:
+        print(ifsc.fetch_details(ifsc_code))
+
+    elif bank and validate:
+        print(ifsc.get_details(bank))
+
+
 
 
 if __name__ == "__main__":
