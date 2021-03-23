@@ -150,7 +150,7 @@ class IFSC:
             bank_code: Bank code to validate
 
         Returns:
-            True if valid, False otherwise.
+            Bank Name if valid, "INVALID BANK CODE" otherwise.
 
         Usage: 
            >>> get_bank_name("HDFC")
@@ -220,8 +220,8 @@ ifsc = IFSC()
 
 # print(ifsc.validate("HDFC0CAACOB"))
 
-print(ifsc.fetch_details("HDFC0CADIBK"))
-
+# print(ifsc.fetch_details("HDFC0CADIBK"))
+# print(ifsc.validate_bank("HDFC",from_get=True))
 # print(ifsc.get_bank_name("YESB"))
 # print(ifsc.get_details("kkbk"))
 

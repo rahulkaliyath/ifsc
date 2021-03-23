@@ -39,5 +39,5 @@ To make the PYTHONPATH persistent, do the following steps
 * Right Click on `This PC` and select `properties`
 * Click on `Advanced System Settings`
 * Under `Advanced` tab, click on `Environment Variables...` button
-* Select `new` on `user variable` section
+* Select `new` in the `user variable` section
 * Give `Variable Name` as `PYTHONPATH` and `ifsc` absolute path as `Variable Value`
