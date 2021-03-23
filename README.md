@@ -34,3 +34,10 @@ To import the IFSC module from any directory, save the `ifsc` directory path in 
 
 **Note: The above command will only work on one shell and the PATH is cleared when shell is closed ** 
 
+To make the PYTHONPATH persistent, do the following steps
+
+* Right Click on `This PC` and select `properties`
+* Click on `Advanced System Settings`
+* Under `Advanced` tab, click on `Environment Variables...` button
+* Select `new` on `user variable` section
+* Give `Variable Name` as `PYTHONPATH` and `ifsc` absolute path as `Variable Value`
