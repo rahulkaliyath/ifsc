@@ -1,0 +1,245 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IFSC main &#8212; IFSC Validator v1.0 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Configuration of Project Environment" href="installation.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-ifsc">
+<span id="ifsc-main"></span><h1>IFSC main<a class="headerlink" href="#module-ifsc" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="ifsc.IFSC">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">ifsc.</span></code><code class="sig-name descname"><span class="pre">IFSC</span></code><a class="reference internal" href="_modules/ifsc.html#IFSC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifsc.IFSC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for Validating IFSC Codes</p>
+<dl class="py method">
+<dt id="ifsc.IFSC.fetch_details">
+<code class="sig-name descname"><span class="pre">fetch_details</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifsc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifsc.html#IFSC.fetch_details"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifsc.IFSC.fetch_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to fetch details of the bank from given IFSC code</p>
+<dl>
+<dt>Args:</dt><dd><p>ifsc: IFSC code</p>
+</dd>
+<dt>Returns:</dt><dd><p>JSON object of bank details if  IFSC is valid, “Invalid IFSC” otherwise.</p>
+</dd>
+<dt>Usage: </dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fetch_details</span><span class="p">(</span><span class="s2">&quot;HDFC0CAACOB&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">{</span>
+<span class="go">     &#39;RTGS&#39;: True, </span>
+<span class="go">     &#39;NEFT&#39;: True,</span>
+<span class="go">     &#39;CENTRE&#39;: &#39;XYZ&#39;, </span>
+<span class="go">     &#39;CITY&#39;: &#39;XYZ&#39;, &#39;IMPS&#39;: True,</span>
+<span class="go">      ...</span>
+<span class="go">     &#39;STATE&#39;: &#39;XYZ&#39;</span>
+<span class="go">     }</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fetch_details</span><span class="p">(</span><span class="s2">&quot;HDFC0CHGYB&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;Invalid IFSC&quot;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ifsc.IFSC.get_bank_name">
+<code class="sig-name descname"><span class="pre">get_bank_name</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bank_code</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifsc.html#IFSC.get_bank_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifsc.IFSC.get_bank_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to get bank name for the given Bank code</p>
+<dl>
+<dt>Args:</dt><dd><p>bank_code: Bank code to validate</p>
+</dd>
+<dt>Returns:</dt><dd><p>Bank Name if valid, “INVALID BANK CODE” otherwise.</p>
+</dd>
+<dt>Usage: </dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_bank_name</span><span class="p">(</span><span class="s2">&quot;HDFC&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">HDFC</span> <span class="n">Bank</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_bank_name</span><span class="p">(</span><span class="s2">&quot;HDY&amp;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;INVALID BANK CODE&quot;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ifsc.IFSC.get_details">
+<code class="sig-name descname"><span class="pre">get_details</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bank_code</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifsc.html#IFSC.get_details"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifsc.IFSC.get_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to get bank details for the given Bank code</p>
+<dl>
+<dt>Args:</dt><dd><p>bank_code: Bank code to validate</p>
+</dd>
+<dt>Returns:</dt><dd><p>JSON object of bank details if valid bank code, “INVALID BANK CODE” otherwise</p>
+</dd>
+<dt>Usage: </dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_details</span><span class="p">(</span><span class="s2">&quot;HDFC&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">{</span>
+<span class="go">     code : &quot;HDFC&quot; </span>
+<span class="go">     type : &#39;Private&#39; </span>
+<span class="go">     ifsc : &#39;XYZS0HGFK5&#39; </span>
+<span class="go">     ...</span>
+<span class="go">     upi : &#39;XYZ51151&#39; </span>
+<span class="go">     name : &#39;XYZ&#39;</span>
+<span class="go">     }</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_details</span><span class="p">(</span><span class="s2">&quot;HDY&amp;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;INVALID BANK CODE&quot;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ifsc.IFSC.validate">
+<code class="sig-name descname"><span class="pre">validate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifsc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifsc.html#IFSC.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifsc.IFSC.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to validate given IFSC code</p>
+<dl>
+<dt>Args:</dt><dd><p>ifsc: IFSC code to validate</p>
+</dd>
+<dt>Returns:</dt><dd><p>True if valid, False otherwise.</p>
+</dd>
+<dt>Usage: </dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">validate</span><span class="p">(</span><span class="s2">&quot;HDFC0CAACOB&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kc">True</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">validate</span><span class="p">(</span><span class="s2">&quot;HDFC0CAASBHB&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kc">False</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ifsc.IFSC.validate_bank">
+<code class="sig-name descname"><span class="pre">validate_bank</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bank_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_get</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ifsc.html#IFSC.validate_bank"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ifsc.IFSC.validate_bank" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to validate given Bank code</p>
+<dl>
+<dt>Args:</dt><dd><p>bank_code: Bank code to validate
+from_get: To identify whether the function is called from another function for validation</p>
+</dd>
+<dt>Returns:</dt><dd><p>True if valid, False otherwise.</p>
+<p>** When from_get is set:</p>
+<blockquote>
+<div><p>returns (True, bank_names , bank_code) if valide, otherwise (False, [], “”)</p>
+</div></blockquote>
+</dd>
+<dt>Usage: </dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">validate_bank</span><span class="p">(</span><span class="s2">&quot;HDFC&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kc">True</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">validate_bank</span><span class="p">(</span><span class="s2">&quot;HVSTV&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kc">False</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">validate_bank</span><span class="p">(</span><span class="s2">&quot;HDFC&quot;</span><span class="p">,</span> <span class="n">from_get</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="p">{</span><span class="o">&lt;</span><span class="n">bank_names</span><span class="o">&gt;</span><span class="p">}</span> <span class="p">,</span> <span class="n">bank_code</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">validate_bank</span><span class="p">(</span><span class="s2">&quot;HDFC&quot;</span><span class="p">,</span> <span class="n">from_get</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="p">[]</span> <span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">IFSC Validator</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Configuration of Project Environment</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">IFSC main</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="installation.html" title="previous chapter">Configuration of Project Environment</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Rahul.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/class.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
