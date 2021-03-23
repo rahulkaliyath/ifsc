@@ -1,4 +1,4 @@
-IFSC main
+Class IFSC
 ===================
 .. automodule:: ifsc
    :members:
