@@ -189,7 +189,7 @@ class IFSC:
                 ...
                 upi : 'XYZ51151' 
                 name : 'XYZ'
-           }
+                }
 
            >>> get_details("HDY&")
            >>> "INVALID BANK CODE"
@@ -216,11 +216,11 @@ def main():
 if __name__ == "__main__":
     main()
 
-# ifsc = IFSC()
+ifsc = IFSC()
 
 # print(ifsc.validate("HDFC0CAACOB"))
 
-# print(ifsc.fetch_details("HDFC0CADIBK"))
+print(ifsc.fetch_details("HDFC0CADIBK"))
 
 # print(ifsc.get_bank_name("YESB"))
 # print(ifsc.get_details("kkbk"))
