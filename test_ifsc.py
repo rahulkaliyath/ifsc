@@ -1,5 +1,8 @@
 from utils import test_utils
 from ifsc import IFSC
+import pytest
+from utils.custom_exception import InvalidCode
+
 
 ifsc = IFSC()
 
@@ -9,7 +12,8 @@ def test_validate():
 
 def test_fetch_details():
     assert ifsc.fetch_details("HDFC0CADIBK") == test_utils.fetch_details_1
-    assert ifsc.fetch_details("HDFS5CADIBK") == "Invalid IFSC"
+    with pytest.raises(InvalidCode):
+            ifsc.fetch_details("HDFS5CADIBK")
 
 def test_validate_bank():
     assert ifsc.validate_bank("HDFC") == True
@@ -19,4 +23,5 @@ def test_validate_bank():
 
 def test_get_bank_name():
     assert ifsc.get_bank_name("HDFC") == "HDFC Bank"
-    assert ifsc.get_bank_name("HDYTY") == "INVALID BANK CODE"
+    with pytest.raises(InvalidCode):
+        ifsc.get_bank_name("HDYTY")

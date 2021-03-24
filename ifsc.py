@@ -1,5 +1,6 @@
 from config import path
 from utils import io_operation
+from utils.custom_exception import InvalidCode
 import requests
 import sys
 import argparse
@@ -38,7 +39,7 @@ class IFSC:
            >>> False
 
         '''
-
+    
         if len(ifsc) != 11 or ifsc[4] != '0':
             return False
 
@@ -85,7 +86,7 @@ class IFSC:
         '''
 
         if not self.validate(ifsc):
-            return "Invalid IFSC"
+            raise InvalidCode("Invalid IFSC Code")
         
         api_endpoint = URL + ifsc
 
@@ -167,7 +168,7 @@ class IFSC:
         if validity:
             return bank_names[bank_code]
         
-        return "INVALID BANK CODE"
+        raise InvalidCode("Invalid Bank Code")
 
 
     def get_details(self,bank_code):
@@ -206,7 +207,7 @@ class IFSC:
 
             return bank_details
         
-        return "INVALID BANK CODE"
+        raise InvalidCode("Invalid Bank Code")
 
 
 def main():
@@ -234,6 +235,9 @@ def main():
         print(ifsc.fetch_details(ifsc_code))
 
     elif bank and validate:
+        print(ifsc.validate_bank(bank))
+
+    elif bank and get:
         print(ifsc.get_details(bank))
 
 
@@ -250,4 +254,5 @@ ifsc = IFSC()
 # print(ifsc.validate_bank("HDFC",from_get=True))
 # print(ifsc.get_bank_name("YESB"))
 # print(ifsc.get_details("kkbk"))
+
 
