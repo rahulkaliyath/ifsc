@@ -1,5 +1,5 @@
 from config import path
-from utils import io_operation
+from utils import io_operation,print_table
 from utils.custom_exception import InvalidCode
 import requests
 import sys
@@ -99,7 +99,7 @@ class IFSC:
 
     #Function to validate given Bank code
     def validate_bank(self,bank_code,from_get=False):
-        '''
+        ''' 
         Function to validate given Bank code 
 
         Args:
@@ -240,13 +240,15 @@ def main():
         print(ifsc.validate(ifsc_code))
     
     elif ifsc_code and get:
-        print(ifsc.fetch_details(ifsc_code))
+        data = ifsc.fetch_details(ifsc_code)
+        print_table.table(data)
 
     elif bank and validate:
         print(ifsc.validate_bank(bank))
 
     elif bank and get:
-        print(ifsc.get_details(bank))
+        data = ifsc.get_details(bank)
+        print_table.table(data)
 
 
 

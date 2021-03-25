@@ -12,8 +12,10 @@ def test_validate():
 
 def test_fetch_details():
     assert ifsc.fetch_details("HDFC0CADIBK") == test_utils.fetch_details_1
-    with pytest.raises(InvalidCode):
-            ifsc.fetch_details("HDFS5CADIBK")
+    try:
+        ifsc.fetch_details("HDFS5CADIBK")
+    except Exception as e:
+        assert e == InvalidCode("Invalid IFSC Code")
 
 def test_validate_bank():
     assert ifsc.validate_bank("HDFC") == True
