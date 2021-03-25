@@ -9,9 +9,9 @@ import os
 module_path = os.environ['PYTHONPATH']
 
 URL=path.BASE_URL
-IFSC_PATH = module_path + path.IFSC_PATH
-BANK_NAMES_PATH = module_path + path.BANK_NAMES_PATH
-BANK_DETAILS_PATH = module_path + path.BANK_DETAILS_PATH
+IFSC_PATH =  path.IFSC_PATH
+BANK_NAMES_PATH =  path.BANK_NAMES_PATH
+BANK_DETAILS_PATH =  path.BANK_DETAILS_PATH
 
 class IFSC:
     """
