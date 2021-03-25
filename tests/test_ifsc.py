@@ -1,7 +1,7 @@
-from utils import test_utils
-from ifsc import IFSC
+from ifsc.utils import test_utils
+from ifsc.ifsc import IFSC
 import pytest
-from utils.custom_exception import InvalidCode
+from ifsc.utils.custom_exception import InvalidCode
 
 
 ifsc = IFSC()
