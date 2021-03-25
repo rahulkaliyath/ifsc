@@ -21,6 +21,7 @@ class IFSC:
     def __init__(self):
         '''Initializing the IFSC Class'''
 
+    #Function to validate given IFSC code
     def validate(self,ifsc):
         '''
         Function to validate given IFSC code 
@@ -39,7 +40,8 @@ class IFSC:
            >>> False
 
         '''
-    
+
+        #Checking if given code meets the IFSC Code Standard
         if len(ifsc) != 11 or ifsc[4] != '0':
             return False
 
@@ -58,7 +60,7 @@ class IFSC:
         
         return branch_code in bank_branch_codes
 
-        
+    #Function to fetch details of the bank from given IFSC code
     def fetch_details(self,ifsc):
         '''
         Function to fetch details of the bank from given IFSC code
@@ -84,16 +86,18 @@ class IFSC:
            >>> "Invalid IFSC"
 
         '''
-
+        #Raise an Exception if the IFSC code is not valid
         if not self.validate(ifsc):
             raise InvalidCode("Invalid IFSC Code")
         
         api_endpoint = URL + ifsc
 
+        #Fetch details from Razorpay API
         bank_details = requests.get(api_endpoint).json()
 
         return bank_details
 
+    #Function to validate given Bank code
     def validate_bank(self,bank_code,from_get=False):
         '''
         Function to validate given Bank code 
@@ -127,8 +131,9 @@ class IFSC:
 
 
         if len(bank_code) != 4:
+            #Returning to another caller function
             if from_get:
-                return False, [], ""
+                return False, [], ""  
             return False
         
         bank_code = bank_code.upper()
@@ -137,12 +142,13 @@ class IFSC:
 
         validity = bank_code in bank_names.keys()
 
+        #Returning to another caller function
         if from_get:
             return validity, bank_names , bank_code
 
         return validity
         
-
+    #Function to get bank name for the given Bank code 
     def get_bank_name(self,bank_code):
         '''
         Function to get bank name for the given Bank code 
@@ -168,9 +174,10 @@ class IFSC:
         if validity:
             return bank_names[bank_code]
         
+        #Raise an Exception if the Bank code is invalid
         raise InvalidCode("Invalid Bank Code")
 
-
+    # Function to get bank details for the given Bank code
     def get_details(self,bank_code):
         '''
         Function to get bank details for the given Bank code 
@@ -207,6 +214,7 @@ class IFSC:
 
             return bank_details
         
+        #Raise an Exception if the Bank code is invalid
         raise InvalidCode("Invalid Bank Code")
 
 
