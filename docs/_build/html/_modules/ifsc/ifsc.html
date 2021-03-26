@@ -1,0 +1,416 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ifsc.ifsc &#8212; ifsc-validator v1.0.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for ifsc.ifsc</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">config</span> <span class="kn">import</span> <span class="n">path</span>
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">io_operation</span><span class="p">,</span><span class="n">print_table</span>
+<span class="kn">from</span> <span class="nn">utils.custom_exception</span> <span class="kn">import</span> <span class="n">InvalidCode</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">module_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PYTHONPATH&#39;</span><span class="p">]</span>
+
+<span class="n">URL</span><span class="o">=</span><span class="n">path</span><span class="o">.</span><span class="n">BASE_URL</span>
+<span class="n">ASSETS_PATH</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">ASSETS_PATH</span>
+<span class="n">IFSC_PATH</span> <span class="o">=</span>  <span class="n">path</span><span class="o">.</span><span class="n">IFSC_PATH</span>
+<span class="n">BANK_NAMES_PATH</span> <span class="o">=</span>  <span class="n">path</span><span class="o">.</span><span class="n">BANK_NAMES_PATH</span>
+<span class="n">BANK_DETAILS_PATH</span> <span class="o">=</span>  <span class="n">path</span><span class="o">.</span><span class="n">BANK_DETAILS_PATH</span>
+
+<div class="viewcode-block" id="IFSC"><a class="viewcode-back" href="../../class.html#ifsc.ifsc.IFSC">[docs]</a><span class="k">class</span> <span class="nc">IFSC</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for Validating IFSC Codes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Initializing the IFSC Class&#39;&#39;&#39;</span>
+
+    <span class="c1">#Function to validate given IFSC code</span>
+<div class="viewcode-block" id="IFSC.validate"><a class="viewcode-back" href="../../class.html#ifsc.ifsc.IFSC.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ifsc</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Function to validate given IFSC code </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ifsc: IFSC code to validate</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True if valid, False otherwise.</span>
+
+<span class="sd">        Usage: </span>
+<span class="sd">           &gt;&gt;&gt; validate(&quot;HDFC0CAACOB&quot;)</span>
+<span class="sd">           &gt;&gt;&gt; True</span>
+
+<span class="sd">           &gt;&gt;&gt; validate(&quot;HDFC0CAASBHB&quot;)</span>
+<span class="sd">           &gt;&gt;&gt; False</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="c1">#Checking if given code meets the IFSC Code Standard</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ifsc</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">11</span> <span class="ow">or</span> <span class="n">ifsc</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;0&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">bank_code</span> <span class="o">=</span> <span class="n">ifsc</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="n">branch_code</span> <span class="o">=</span> <span class="n">ifsc</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+        <span class="n">ifsc_list</span> <span class="o">=</span> <span class="n">io_operation</span><span class="o">.</span><span class="n">load_json</span><span class="p">(</span><span class="n">IFSC_PATH</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">bank_code</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ifsc_list</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">bank_branch_codes</span> <span class="o">=</span> <span class="n">ifsc_list</span><span class="p">[</span><span class="n">bank_code</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="n">branch_code</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">branch_code</span><span class="p">)</span> <span class="ow">in</span> <span class="n">bank_branch_codes</span>
+        
+        <span class="k">return</span> <span class="n">branch_code</span> <span class="ow">in</span> <span class="n">bank_branch_codes</span></div>
+
+    <span class="c1">#Function to fetch details of the bank from given IFSC code</span>
+<div class="viewcode-block" id="IFSC.fetch_details"><a class="viewcode-back" href="../../class.html#ifsc.ifsc.IFSC.fetch_details">[docs]</a>    <span class="k">def</span> <span class="nf">fetch_details</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ifsc</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Function to fetch details of the bank from given IFSC code</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ifsc: IFSC code </span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JSON object of bank details if  IFSC is valid, &quot;Invalid IFSC&quot; otherwise.</span>
+
+<span class="sd">        Usage: </span>
+<span class="sd">           &gt;&gt;&gt; fetch_details(&quot;HDFC0CAACOB&quot;)</span>
+<span class="sd">           &gt;&gt;&gt; {</span>
+<span class="sd">                &#39;RTGS&#39;: True, </span>
+<span class="sd">                &#39;NEFT&#39;: True,</span>
+<span class="sd">                &#39;CENTRE&#39;: &#39;XYZ&#39;, </span>
+<span class="sd">                &#39;CITY&#39;: &#39;XYZ&#39;, &#39;IMPS&#39;: True,</span>
+<span class="sd">                 ...</span>
+<span class="sd">                &#39;STATE&#39;: &#39;XYZ&#39;</span>
+<span class="sd">                }</span>
+
+<span class="sd">           &gt;&gt;&gt; fetch_details(&quot;HDFC0CHGYB&quot;)</span>
+<span class="sd">           &gt;&gt;&gt; InvalidCode(&quot;Invalid IFSC Code&quot;)</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1">#Raise an Exception if the IFSC code is not valid</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">ifsc</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">InvalidCode</span><span class="p">(</span><span class="s2">&quot;Invalid IFSC Code&quot;</span><span class="p">)</span>
+        
+        <span class="n">api_endpoint</span> <span class="o">=</span> <span class="n">URL</span> <span class="o">+</span> <span class="n">ifsc</span>
+
+        <span class="c1">#Fetch details from Razorpay API</span>
+        <span class="n">bank_details</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">api_endpoint</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">bank_details</span></div>
+
+    <span class="c1">#Function to validate given Bank code</span>
+<div class="viewcode-block" id="IFSC.validate_bank"><a class="viewcode-back" href="../../class.html#ifsc.ifsc.IFSC.validate_bank">[docs]</a>    <span class="k">def</span> <span class="nf">validate_bank</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bank_code</span><span class="p">,</span><span class="n">from_get</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; </span>
+<span class="sd">        Function to validate given Bank code </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            bank_code: Bank code to validate</span>
+<span class="sd">            from_get: To identify whether the function is called from another function for validation</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True if valid, False otherwise.</span>
+
+<span class="sd">            ** When from_get is set:</span>
+
+<span class="sd">                returns (True, bank_names , bank_code) if valide, otherwise (False, [], &quot;&quot;)</span>
+
+
+<span class="sd">        Usage: </span>
+<span class="sd">           &gt;&gt;&gt; validate_bank(&quot;HDFC&quot;)</span>
+<span class="sd">           &gt;&gt;&gt; True</span>
+
+<span class="sd">           &gt;&gt;&gt; validate_bank(&quot;HVSTV&quot;)</span>
+<span class="sd">           &gt;&gt;&gt; False</span>
+
+<span class="sd">           &gt;&gt;&gt; validate_bank(&quot;HDFC&quot;, from_get=True)</span>
+<span class="sd">           &gt;&gt;&gt; (True, {&lt;bank_names&gt;} , bank_code)</span>
+
+<span class="sd">           &gt;&gt;&gt; validate_bank(&quot;HDFC&quot;, from_get=True)</span>
+<span class="sd">           &gt;&gt;&gt; (False, [] , &quot;&quot;)</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bank_code</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="c1">#Returning to another caller function</span>
+            <span class="k">if</span> <span class="n">from_get</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">[],</span> <span class="s2">&quot;&quot;</span>  
+            <span class="k">return</span> <span class="kc">False</span>
+        
+        <span class="n">bank_code</span> <span class="o">=</span> <span class="n">bank_code</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+        <span class="n">bank_names</span> <span class="o">=</span> <span class="n">io_operation</span><span class="o">.</span><span class="n">load_json</span><span class="p">(</span><span class="n">BANK_NAMES_PATH</span><span class="p">)</span>
+
+        <span class="n">validity</span> <span class="o">=</span> <span class="n">bank_code</span> <span class="ow">in</span> <span class="n">bank_names</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+        <span class="c1">#Returning to another caller function</span>
+        <span class="k">if</span> <span class="n">from_get</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">validity</span><span class="p">,</span> <span class="n">bank_names</span> <span class="p">,</span> <span class="n">bank_code</span>
+
+        <span class="k">return</span> <span class="n">validity</span></div>
+        
+    <span class="c1">#Function to get bank name for the given Bank code </span>
+<div class="viewcode-block" id="IFSC.get_bank_name"><a class="viewcode-back" href="../../class.html#ifsc.ifsc.IFSC.get_bank_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_bank_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bank_code</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Function to get bank name for the given Bank code </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            bank_code: Bank code to validate</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Bank Name if valid, &quot;INVALID BANK CODE&quot; otherwise.</span>
+
+<span class="sd">        Usage: </span>
+<span class="sd">           &gt;&gt;&gt; get_bank_name(&quot;HDFC&quot;)</span>
+<span class="sd">           &gt;&gt;&gt; HDFC Bank</span>
+
+<span class="sd">           &gt;&gt;&gt; get_bank_name(&quot;HDY&amp;&quot;)</span>
+<span class="sd">           &gt;&gt;&gt; InvalidCode(&quot;Invalid Bank Code&quot;)</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        
+        <span class="n">validity</span><span class="p">,</span> <span class="n">bank_names</span><span class="p">,</span> <span class="n">bank_code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_bank</span><span class="p">(</span><span class="n">bank_code</span><span class="p">,</span><span class="n">from_get</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">validity</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">bank_names</span><span class="p">[</span><span class="n">bank_code</span><span class="p">]</span>
+        
+        <span class="c1">#Raise an Exception if the Bank code is invalid</span>
+        <span class="k">raise</span> <span class="n">InvalidCode</span><span class="p">(</span><span class="s2">&quot;Invalid Bank Code&quot;</span><span class="p">)</span></div>
+
+    <span class="c1"># Function to get bank details for the given Bank code</span>
+<div class="viewcode-block" id="IFSC.get_details"><a class="viewcode-back" href="../../class.html#ifsc.ifsc.IFSC.get_details">[docs]</a>    <span class="k">def</span> <span class="nf">get_details</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bank_code</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Function to get bank details for the given Bank code </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            bank_code: Bank code to validate</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JSON object of bank details if valid bank code, nvalidCode(&quot;Invalid Bank Code&quot;) otherwise</span>
+
+<span class="sd">        Usage: </span>
+<span class="sd">           &gt;&gt;&gt; get_details(&quot;HDFC&quot;)</span>
+<span class="sd">           &gt;&gt;&gt; {</span>
+<span class="sd">                code : &quot;HDFC&quot; </span>
+<span class="sd">                type : &#39;Private&#39; </span>
+<span class="sd">                ifsc : &#39;XYZS0HGFK5&#39; </span>
+<span class="sd">                ...</span>
+<span class="sd">                upi : &#39;XYZ51151&#39; </span>
+<span class="sd">                name : &#39;XYZ&#39;</span>
+<span class="sd">                }</span>
+
+<span class="sd">           &gt;&gt;&gt; get_details(&quot;HDY&amp;&quot;)</span>
+<span class="sd">           &gt;&gt;&gt; InvalidCode(&quot;Invalid BANK Code&quot;)</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="n">validity</span><span class="p">,</span> <span class="n">bank_names</span><span class="p">,</span> <span class="n">bank_code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_bank</span><span class="p">(</span><span class="n">bank_code</span><span class="p">,</span><span class="n">from_get</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">validity</span><span class="p">:</span>
+            <span class="n">all_bank_details</span> <span class="o">=</span> <span class="n">io_operation</span><span class="o">.</span><span class="n">load_json</span><span class="p">(</span><span class="n">BANK_DETAILS_PATH</span><span class="p">)</span>
+
+            <span class="n">bank_details</span> <span class="o">=</span> <span class="n">all_bank_details</span><span class="p">[</span><span class="n">bank_code</span><span class="p">]</span>
+            <span class="n">bank_details</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bank_names</span><span class="p">[</span><span class="n">bank_code</span><span class="p">]</span>
+
+            <span class="k">return</span> <span class="n">bank_details</span>
+        
+        <span class="c1">#Raise an Exception if the Bank code is invalid</span>
+        <span class="k">raise</span> <span class="n">InvalidCode</span><span class="p">(</span><span class="s2">&quot;Invalid Bank Code&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="IFSC.get_banks_in_city"><a class="viewcode-back" href="../../class.html#ifsc.ifsc.IFSC.get_banks_in_city">[docs]</a>    <span class="k">def</span> <span class="nf">get_banks_in_city</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bank</span><span class="p">,</span><span class="n">city</span><span class="p">,</span><span class="n">head</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Function to get list bank details for the given Bank code in the given city</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            bank_code: Bank code to validate</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JSON object of bank details in a given city if valid bank code, &quot;INVALID BANK CODE&quot; otherwise</span>
+
+<span class="sd">        Usage: </span>
+<span class="sd">           &gt;&gt;&gt; get_banks_in_city(&quot;SBIN&quot;,&quot;chennai)</span>
+<span class="sd">           &gt;&gt;&gt; [{&#39;IFSC&#39;: &#39;SBIN0000249&#39;, </span>
+<span class="sd">                &#39;BRANCH&#39;: &#39;TRIPLICANE (CHENNAI)&#39;, </span>
+<span class="sd">                &#39;CENTRE&#39;: &#39;CHENNAI&#39;, &#39;STATE&#39;: &#39;TAMIL NADU&#39;, </span>
+<span class="sd">                ...</span>
+<span class="sd">                &#39;BANK&#39;: &#39;STATE BANK OF INDIA&#39;},</span>
+<span class="sd">                ...</span>
+<span class="sd">                ]</span>
+
+<span class="sd">           &gt;&gt;&gt; get_banks_in_city(&quot;SBIJU&quot;,&quot;chennai)</span>
+<span class="sd">           &gt;&gt;&gt; InvalidCode(&quot;Invalid BANK Code&quot;)</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">validity</span><span class="p">,</span> <span class="n">bank_names</span><span class="p">,</span> <span class="n">bank_code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_bank</span><span class="p">(</span><span class="n">bank</span><span class="p">,</span><span class="n">from_get</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">validity</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidCode</span><span class="p">(</span><span class="s2">&quot;Invalid Bank Code&quot;</span><span class="p">)</span>
+        
+        <span class="n">banks</span> <span class="o">=</span> <span class="n">io_operation</span><span class="o">.</span><span class="n">load_json</span><span class="p">(</span><span class="n">ASSETS_PATH</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bank</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">bank</span> <span class="k">for</span> <span class="n">bank</span> <span class="ow">in</span> <span class="n">banks</span> <span class="k">if</span> <span class="n">bank</span><span class="p">[</span><span class="s1">&#39;CITY&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">city</span><span class="o">.</span><span class="n">upper</span><span class="p">()][:</span><span class="n">head</span><span class="p">]</span></div></div>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">ifsc</span> <span class="o">=</span> <span class="n">IFSC</span><span class="p">()</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-ifsc&quot;</span><span class="p">,</span><span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Enter the IFSC CODE&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-bank&quot;</span><span class="p">,</span><span class="s2">&quot;-b&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Enter the Bank CODE&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-city&quot;</span><span class="p">,</span><span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Enter the name of the city &quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span><span class="s2">&quot;--validate&quot;</span><span class="p">,</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Use flag to validate code&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-g&quot;</span><span class="p">,</span><span class="s2">&quot;--get&quot;</span><span class="p">,</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Use flag to get details&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-H&quot;</span><span class="p">,</span><span class="s2">&quot;--head&quot;</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Use flag to list only top n results&quot;</span><span class="p">)</span>
+
+
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="n">ifsc_code</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">ifsc</span>
+    <span class="n">bank</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">bank</span>
+    <span class="n">city</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">city</span>
+    <span class="n">validate</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">validate</span>
+    <span class="n">get</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span>
+    <span class="n">head</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">head</span>
+
+    <span class="k">if</span> <span class="n">ifsc_code</span> <span class="ow">and</span> <span class="n">validate</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">ifsc</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">ifsc_code</span><span class="p">))</span>
+    
+    <span class="k">elif</span> <span class="n">ifsc_code</span> <span class="ow">and</span> <span class="n">get</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">ifsc</span><span class="o">.</span><span class="n">fetch_details</span><span class="p">(</span><span class="n">ifsc_code</span><span class="p">)</span>
+        <span class="n">print_table</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">bank</span> <span class="ow">and</span> <span class="n">validate</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">ifsc</span><span class="o">.</span><span class="n">validate_bank</span><span class="p">(</span><span class="n">bank</span><span class="p">))</span>
+
+    <span class="k">elif</span> <span class="n">bank</span> <span class="ow">and</span> <span class="n">get</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">ifsc</span><span class="o">.</span><span class="n">get_details</span><span class="p">(</span><span class="n">bank</span><span class="p">)</span>
+        <span class="n">print_table</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">city</span> <span class="ow">and</span> <span class="n">bank</span><span class="p">:</span>
+        <span class="n">head</span> <span class="o">=</span> <span class="n">head</span> <span class="k">if</span> <span class="n">head</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span> 
+        <span class="n">data</span> <span class="o">=</span> <span class="n">ifsc</span><span class="o">.</span><span class="n">get_banks_in_city</span><span class="p">(</span><span class="n">bank</span><span class="p">,</span><span class="n">city</span><span class="p">,</span><span class="n">head</span><span class="p">)</span>
+        <span class="n">print_table</span><span class="o">.</span><span class="n">table_row</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InvalidCode</span><span class="p">(</span><span class="s2">&quot;Invalid Arguments Passed. Run ifsc-cli --help to view usages&quot;</span><span class="p">)</span>
+
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+
+<span class="c1"># ifsc = IFSC()</span>
+
+<span class="c1"># ifsc.get_banks_in_city(&quot;HDFC&quot;,&quot;CHENNAI&quot;)</span>
+
+<span class="c1"># print(ifsc.validate(&quot;HDFC0CAACOB&quot;))</span>
+
+<span class="c1"># print(ifsc.fetch_details(&quot;HDFC0CADIBK&quot;))</span>
+<span class="c1"># print(ifsc.validate_bank(&quot;HDFC&quot;,from_get=True))</span>
+<span class="c1"># print(ifsc.get_bank_name(&quot;YESB&quot;))</span>
+<span class="c1"># print(ifsc.get_details(&quot;kkbk&quot;))</span>
+
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">ifsc-validator</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../class.html">Class IFSC</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Rahul.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

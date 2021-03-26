@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Usage &#8212; IFSC Validator v1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Class IFSC" href="class.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="usage">
+<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
+<p>Once the package is installed, the library can be accessed through CLI or by importing in other modules.</p>
+<div class="section" id="command-line-usage">
+<h2>Command Line Usage<a class="headerlink" href="#command-line-usage" title="Permalink to this headline">¶</a></h2>
+<p><strong>ifsc-cli</strong> is the command to access the library.
+#### Options
+<strong>-ifsc</strong> , <strong>-i</strong> : To validate and get information on an <strong>IFSC</strong> code</p>
+<p><strong>-bank</strong> , <strong>-b</strong> : To validate and get information on a <strong>BANK</strong> code</p>
+<p><strong>-city</strong> , <strong>-c</strong> : Used along with <strong>-bank</strong> to get list of given bank in given city</p>
+<p><strong>–validate</strong> , <strong>-v</strong> : To validate an <strong>IFSC</strong> code or a <strong>BANK</strong> code</p>
+<p><strong>–get</strong> , <strong>-g</strong> : To get information of an <strong>IFSC</strong> code or a <strong>BANK</strong> code</p>
+<p><strong>–head</strong> , <strong>-H</strong> : List only top <strong>n</strong> results</p>
+<p><strong>–help</strong> , <strong>-h</strong> : To view all the options and usage of each option</p>
+<p>Examples</p>
+<ul>
+<li><p>IFSC Code Validate</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ifsc</span><span class="o">-</span><span class="n">cli</span> <span class="o">-</span><span class="n">ifsc</span> <span class="n">HDFC0CAACOB</span> <span class="o">--</span><span class="n">validate</span>
+</pre></div>
+</div>
+</li>
+<li><p>Get Details of an IFSC Code</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ifsc</span><span class="o">-</span><span class="n">cli</span> <span class="o">-</span><span class="n">ifsc</span> <span class="n">HDFC0CAACOB</span> <span class="o">--</span><span class="n">get</span>
+</pre></div>
+</div>
+</li>
+<li><p>Bank Code Validate</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ifsc</span><span class="o">-</span><span class="n">cli</span> <span class="o">-</span><span class="n">bank</span> <span class="n">HDFC</span> <span class="o">--</span><span class="n">validate</span>
+</pre></div>
+</div>
+</li>
+<li><p>Get Details of a Bank Code</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ifsc</span><span class="o">-</span><span class="n">cli</span> <span class="o">-</span><span class="n">bank</span> <span class="n">HDFC</span> <span class="o">--</span><span class="n">get</span>
+</pre></div>
+</div>
+</li>
+<li><p>Get list of banks in given city</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ifsc</span><span class="o">-</span><span class="n">cli</span> <span class="o">-</span><span class="n">city</span> <span class="n">bangalore</span> <span class="o">-</span><span class="n">bank</span> <span class="n">HDFC</span> <span class="o">--</span><span class="n">head</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="testing">
+<h1>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h1>
+<p>The test cases are written in <strong>test/test_ifsc.py</strong>.CD into <strong>ifsc</strong> root directory and Run the following to test the library</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pytest</span> <span class="o">.</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">IFSC Validator</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="class.html">Class IFSC</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#command-line-usage">Command Line Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#testing">Testing</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="class.html" title="previous chapter">Class IFSC</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Rahul.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/usage.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

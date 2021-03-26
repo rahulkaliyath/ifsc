@@ -9,6 +9,7 @@ import os
 module_path = os.environ['PYTHONPATH']
 
 URL=path.BASE_URL
+ASSETS_PATH = path.ASSETS_PATH
 IFSC_PATH =  path.IFSC_PATH
 BANK_NAMES_PATH =  path.BANK_NAMES_PATH
 BANK_DETAILS_PATH =  path.BANK_DETAILS_PATH
@@ -83,7 +84,7 @@ class IFSC:
                 }
 
            >>> fetch_details("HDFC0CHGYB")
-           >>> "Invalid IFSC"
+           >>> InvalidCode("Invalid IFSC Code")
 
         '''
         #Raise an Exception if the IFSC code is not valid
@@ -164,7 +165,7 @@ class IFSC:
            >>> HDFC Bank
 
            >>> get_bank_name("HDY&")
-           >>> "INVALID BANK CODE"
+           >>> InvalidCode("Invalid Bank Code")
 
         '''
 
@@ -186,7 +187,7 @@ class IFSC:
             bank_code: Bank code to validate
 
         Returns:
-            JSON object of bank details if valid bank code, "INVALID BANK CODE" otherwise
+            JSON object of bank details if valid bank code, nvalidCode("Invalid Bank Code") otherwise
 
         Usage: 
            >>> get_details("HDFC")
@@ -200,7 +201,7 @@ class IFSC:
                 }
 
            >>> get_details("HDY&")
-           >>> "INVALID BANK CODE"
+           >>> InvalidCode("Invalid BANK Code")
 
         '''
 
@@ -217,24 +218,59 @@ class IFSC:
         #Raise an Exception if the Bank code is invalid
         raise InvalidCode("Invalid Bank Code")
 
+    def get_banks_in_city(self,bank,city,head=-1):
+        '''
+        Function to get list bank details for the given Bank code in the given city
+
+        Args:
+            bank_code: Bank code to validate
+
+        Returns:
+            JSON object of bank details in a given city if valid bank code, "INVALID BANK CODE" otherwise
+
+        Usage: 
+           >>> get_banks_in_city("SBIN","chennai)
+           >>> [{'IFSC': 'SBIN0000249', 
+                'BRANCH': 'TRIPLICANE (CHENNAI)', 
+                'CENTRE': 'CHENNAI', 'STATE': 'TAMIL NADU', 
+                ...
+                'BANK': 'STATE BANK OF INDIA'},
+                ...
+                ]
+
+           >>> get_banks_in_city("SBIJU","chennai)
+           >>> InvalidCode("Invalid BANK Code")
+
+        '''
+        validity, bank_names, bank_code = self.validate_bank(bank,from_get=True)
+
+        if not validity:
+            raise InvalidCode("Invalid Bank Code")
+        
+        banks = io_operation.load_json(ASSETS_PATH + f"{bank}.json")
+
+        return [bank for bank in banks if bank['CITY'] == city.upper()][:head]
 
 def main():
     ifsc = IFSC()
     parser = argparse.ArgumentParser()
     parser.add_argument("-ifsc","-i", help="Enter the IFSC CODE")
-    parser.add_argument("-b","--bank", help="Enter the Bank CODE")
+    parser.add_argument("-bank","-b", help="Enter the Bank CODE")
+    parser.add_argument("-city","-c", help="Enter the name of the city ")
     parser.add_argument("-v","--validate",action="store_true", help="Use flag to validate code")
-    parser.add_argument("-g","--get",action="store_true", help="Use flag to validate code")
+    parser.add_argument("-g","--get",action="store_true", help="Use flag to get details")
+    parser.add_argument("-H","--head",type=int, help="Use flag to list only top n results")
 
 
 
     args = parser.parse_args()
 
- 
     ifsc_code = args.ifsc
     bank = args.bank
+    city = args.city
     validate = args.validate
     get = args.get
+    head = args.head
 
     if ifsc_code and validate:
         print(ifsc.validate(ifsc_code))
@@ -250,13 +286,23 @@ def main():
         data = ifsc.get_details(bank)
         print_table.table(data)
 
+    elif city and bank:
+        head = head if head else -1 
+        data = ifsc.get_banks_in_city(bank,city,head)
+        print_table.table_row(data)
+    
+    else:
+        raise InvalidCode("Invalid Arguments Passed. Run ifsc-cli --help to view usages")
+
 
 
 
 if __name__ == "__main__":
     main()
 
-ifsc = IFSC()
+# ifsc = IFSC()
+
+# ifsc.get_banks_in_city("HDFC","CHENNAI")
 
 # print(ifsc.validate("HDFC0CAACOB"))
 
